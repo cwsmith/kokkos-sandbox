@@ -8,26 +8,23 @@
 
 
 typedef Kokkos::View<int*>  int_array;
-typedef Kokkos::View<int>   int_type;
 
 typedef Kokkos::DefaultExecutionSpace   device_type;
 
 template< typename ExecutionSpace >
 struct init_vec {
 
-  int_type var;
-  int_array vec;
+  int_array v;
 
-  init_vec( int_type var_in, int_array vec_in)
-    : var( var_in )
-    , vec( vec_in )
+  init_vec( int_array vec_in)
+    : v( vec_in )
     {
       Kokkos::parallel_for(2,*this);
     }
 
   KOKKOS_INLINE_FUNCTION
   void operator()( const size_t idx ) const {
-    printf("init_vec () index %lu vec(:) %d %d\n", idx, vec(0), vec(1));
+    printf("init_vec () index %lu vec(:) %d %d\n", idx, v(0), v(1));
   }
 };
 
@@ -43,13 +40,8 @@ int main( int argc, char* argv[] )
   h_vec(0) = 42;
   Kokkos::deep_copy( vec, h_vec ); //copy the array to the device
 
-  int_type var("var", 1); //proxy for BFS root node
-  typename int_type::HostMirror h_var = Kokkos::create_mirror_view( var );
-  h_var() = 42;
-  Kokkos::deep_copy( var, h_var ); //copy the scalar to the device
-
   // call the functor to set the first entry of vec to the scalar
-  init_vec<device_type>(var, vec);
+  init_vec< device_type > foo(vec);
 
   Kokkos::finalize();
 
