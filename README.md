@@ -1,6 +1,8 @@
 # kokkos-sandbox
 trying stuff with kokkos
 
+The build scripts below have a path to kokkos source hardcoded.
+
 ## Build on Ray
 
 ### Setup
