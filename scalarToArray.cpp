@@ -22,15 +22,12 @@ struct init_vec {
     : var( var_in )
     , vec( vec_in )
     {
-      Kokkos::parallel_for(1,*this);
+      Kokkos::parallel_for(2,*this);
     }
 
   KOKKOS_INLINE_FUNCTION
   void operator()( const size_t idx ) const {
-    printf("hello from init_vec operator () index %lu\n", idx);
-    if ( idx == 0 ) {
-      printf("hello from init_vec operator ()\n");
-    }
+    printf("init_vec () index %lu vec(:) %d %d\n", idx, vec(0), vec(1));
   }
 };
 
@@ -43,6 +40,8 @@ int main( int argc, char* argv[] )
 
   int_array vec("vec", 2); //proxy for initially empty queue
   typename int_array::HostMirror h_vec = Kokkos::create_mirror_view( vec );
+  h_vec(0) = 42;
+  Kokkos::deep_copy( vec, h_vec ); //copy the array to the device
 
   int_type var("var", 1); //proxy for BFS root node
   typename int_type::HostMirror h_var = Kokkos::create_mirror_view( var );
