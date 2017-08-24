@@ -15,7 +15,7 @@ mkdir build-host build-device
 ### Host build
 ```
 cd build-host
-../build-ray-gnu-host.sh
+../config-ray-gnu-host.sh [Debug|Release]
 make
 ```
 
@@ -23,7 +23,7 @@ make
 
 ```
 cd build-device
-../build-ray-gnu-device.sh
+../config-ray-gnu-device.sh [Debug|Release]
 make
 ```
 
